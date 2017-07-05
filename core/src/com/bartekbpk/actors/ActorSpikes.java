@@ -10,10 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class ActorSpikes extends Actor {
 
-    private TextureRegion spikes;
+    private TextureRegion textureSpikes;
 
-    public ActorSpikes(TextureRegion spikes) {
-        this.spikes = spikes;
+    public ActorSpikes(TextureRegion textureSpikes) {
+        this.textureSpikes = textureSpikes;
+        setSize(textureSpikes.getRegionWidth(), textureSpikes.getRegionHeight());
+        
     }
 
     @Override
@@ -23,6 +25,6 @@ public class ActorSpikes extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(spikes, getX(), getY());
+        batch.draw(textureSpikes, getX(), getY());
     }
 }

@@ -3,7 +3,7 @@ package com.bartekbpk;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.bartekbpk.actors.ActorOwl;
+import com.bartekbpk.actors.ActorPlayer;
 import com.bartekbpk.actors.ActorSpikes;
 
 /**
@@ -14,7 +14,7 @@ import com.bartekbpk.actors.ActorSpikes;
 public class MainGameScreen extends BaseScreen {
 
     private Stage stage;
-    private ActorOwl actorOwl;
+    private ActorPlayer actorPlayer;
     private ActorSpikes actorSpikes;
     private Texture textureOwl;
     private Texture textureSpikes;
@@ -30,14 +30,15 @@ public class MainGameScreen extends BaseScreen {
     @Override
     public void show() {
         stage = new Stage();
+        stage.setDebugAll(true);
 
-        actorOwl = new ActorOwl(textureOwl);
+        actorPlayer = new ActorPlayer(textureOwl);
         actorSpikes = new ActorSpikes(textureRegionSpikes);
 
-        stage.addActor(actorOwl);
+        stage.addActor(actorPlayer);
         stage.addActor(actorSpikes);
 
-        actorOwl.setPosition(20, 0);
+        actorPlayer.setPosition(20, 0);
         actorSpikes.setPosition(960, 0);
 
     }
@@ -51,7 +52,16 @@ public class MainGameScreen extends BaseScreen {
     public void render(float delta) {
         super.render(delta);
         stage.act();
+        collisionDetection();
         stage.draw();
+    }
+
+    private void collisionDetection() {
+        if (actorPlayer.isAlive() &&
+                (actorPlayer.getX() + actorPlayer.getWidth() > actorSpikes.getX())) {
+            System.out.println("collision");
+            actorPlayer.setAlive(false);
+        }
     }
 
     @Override
