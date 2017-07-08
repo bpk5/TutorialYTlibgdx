@@ -24,8 +24,10 @@ public class Box2DScreen extends BaseScreen {
     private OrthographicCamera camera;
 
     private Body playerBody;
+    private Body landBody;
 
     private Fixture playerFixture;
+    private Fixture landFixture;
 
     public Box2DScreen(MainGame game) {
         super(game);
@@ -35,15 +37,28 @@ public class Box2DScreen extends BaseScreen {
     public void show() {
         world = new World(new Vector2(0, -10), true);
         renderer = new Box2DDebugRenderer();
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera = new OrthographicCamera(Gdx.graphics.getWidth() / 60, Gdx.graphics.getHeight() / 60);
+        camera.translate(0, 3);
 
-        BodyDef playerDef = createPlayerBodyDef();
-        playerBody = world.createBody(playerDef);
+
+        playerBody = world.createBody(createPlayerBodyDef());
+        landBody = world.createBody(createLandBodyDef());
 
         PolygonShape playerShape = new PolygonShape();
         playerShape.setAsBox(1, 1);
         playerFixture = playerBody.createFixture(playerShape, 1);
         playerShape.dispose();
+
+        PolygonShape landShape = new PolygonShape();
+        landShape.setAsBox(500, 1);
+        landFixture = landBody.createFixture(landShape, 1);
+        landShape.dispose();
+    }
+
+    private BodyDef createLandBodyDef() {
+        BodyDef def = new BodyDef();
+        def.position.set(0, -1);
+        return def;
     }
 
     private BodyDef createPlayerBodyDef() {
@@ -64,6 +79,8 @@ public class Box2DScreen extends BaseScreen {
 
     @Override
     public void dispose() {
+        playerBody.destroyFixture(playerFixture);
+        landBody.destroyFixture(landFixture);
         world.destroyBody(playerBody);
         world.dispose();
         renderer.dispose();
